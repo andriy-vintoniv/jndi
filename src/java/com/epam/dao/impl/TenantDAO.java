@@ -3,24 +3,24 @@ package com.epam.dao.impl;
 import com.epam.dao.GenericDAO;
 import com.epam.model.Tenant;
 
-public class TenantDAO implements GenericDAO<Tenant> {
+public class TenantDAO extends GenericDAO<Tenant> {
 
-	@Override
-	public Tenant read() {
-		// TODO Auto-generated method stub
-		return null;
+	public TenantDAO() {
 	}
 
 	@Override
-	public void update(Tenant object) {
-		// TODO Auto-generated method stub
-
+	public Tenant read(String cn, String baseContext, String javaClassName) {
+		Tenant tenant = super.read(cn, baseContext, javaClassName);
+		return tenant;
 	}
 
 	@Override
-	public void create(Tenant object, String ou, String cn, String workContext) {
-		// TODO Auto-generated method stub
-
+	public void update(Tenant tenant, String cn, String baseContext) {
+		super.update(tenant, cn, baseContext);
 	}
 
+	@Override
+	public void create(Tenant tenant, String cn, String baseContext) {
+		super.create(tenant, cn, baseContext);
+	}
 }

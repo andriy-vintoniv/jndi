@@ -1,7 +1,6 @@
 package com.epam.controller;
 
 import com.epam.model.User;
-import com.epam.service.JavaToLDAPService;
 import com.epam.service.UserService;
 
 public class Main {
@@ -15,27 +14,21 @@ public class Main {
 		user.setId(1);
 		user.setBirthday("25/09/1989");
 		user.setEmail("sem.ukr.net");
-		user.setName("Semen");
+		user.setName("Semen3");
 		user.setPassword("password2");
 
 		UserService userService = new UserService();
 
-		userService.create(user, "User", null, "ou=groups");
+		userService.create(user);
 
-		JavaToLDAPService javaToLDAPService = new JavaToLDAPService();
-		// javaToLDAPService.setPassword("secret");
-		// javaToLDAPService.setUserID("Alice");
+		User user2 = userService.read(user.getName());
 
-		// Setting a Java object.
-		try {
-			javaToLDAPService.setJavaObject(user);
-		} catch (Exception e) {
-			System.out.println("Not a serializable object");
-			e.printStackTrace();
-		}
+		System.out.println("Read user email: " + user2.getEmail());
 
-		javaToLDAPService.setJavaObjectCN("preferences");
-		javaToLDAPService.writeToServer();
-		System.out.println("Entry stored in ApacheDS..");
+		user.setEmail("sen_updated@ukr.net");
+		userService.update(user);
+		user2 = userService.read(user.getName());
+
+		System.out.println("Updated user email: " + user2.getEmail());
 	}
 }

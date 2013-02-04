@@ -6,11 +6,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
-import com.epam.StoreAlicePreferences;
-
 public class ConnectionService {
 	private Properties properties = new Properties();
-	private DirContext dirContext;
 
 	public ConnectionService() {
 		init();
@@ -19,7 +16,7 @@ public class ConnectionService {
 	private void init() {
 
 		try {
-			properties.load(StoreAlicePreferences.class
+			properties.load(ConnectionService.class
 					.getResourceAsStream("/ApacheDS.properties"));
 			properties
 					.setProperty("java.naming.security.credentials", "secret");
@@ -30,6 +27,8 @@ public class ConnectionService {
 	}
 
 	public DirContext connect() {
+		DirContext dirContext = null;
+
 		try {
 			// Fetch the directory context.
 			dirContext = new InitialDirContext(properties);
@@ -41,7 +40,7 @@ public class ConnectionService {
 		return dirContext;
 	}
 
-	public void close() {
+	public void close(DirContext dirContext) {
 		try {
 			// Close the directory context.
 			dirContext.close();

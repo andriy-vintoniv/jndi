@@ -5,10 +5,11 @@ import com.epam.model.Tenant;
 import com.epam.model.User;
 
 public class TenantService {
+	private final static String BASE_CONTEXT = "cn=Tenant,ou=groups";
 	private TenantDAO tenantDAO = new TenantDAO();;
 
 	public void create(Tenant tenant, String ou, String cn, String workContext) {
-		this.tenantDAO.create(tenant, ou, cn, workContext);
+		this.tenantDAO.create(tenant, tenant.getName(), BASE_CONTEXT);
 	}
 
 	public User read() {
