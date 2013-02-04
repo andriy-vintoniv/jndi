@@ -5,6 +5,8 @@ import java.util.Properties;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import com.epam.model.User;
+
 public class StoreAlicePreferences {
 
 	public StoreAlicePreferences() {
@@ -12,7 +14,6 @@ public class StoreAlicePreferences {
 			// ------------------------------------------
 			// Step1: Setting up JNDI properties for ApacheDS
 			// ------------------------------------------
-			System.out.println("fasdfasd");
 			Properties properties = new Properties();
 			properties.load(StoreAlicePreferences.class
 					.getResourceAsStream("/ApacheDS.properties"));
@@ -27,13 +28,18 @@ public class StoreAlicePreferences {
 			// ------------------------------------------
 			// Step3: Instantiate a Java object
 			// ------------------------------------------
-			MessagingPreferences preferences = new MessagingPreferences();
+			User user = new User();
+			user.setId(1);
+			user.setBirthday("25/09/1989");
+			user.setEmail("av.ukr.net");
+			user.setName("Andriy");
+			user.setPassword("password1");
 
 			// ------------------------------------------
 			// Step4: Store the Java object in ApacheDS
 			// ------------------------------------------
-			String bindContext = "cn=preferences,ou=alice,ou=users";
-			ctx.bind(bindContext, preferences);
+			String bindContext = "cn=Andriy,cn=Tenant,ou=groups";
+			ctx.bind(bindContext, user);
 		} catch (Exception e) {
 			System.out.println("Operation failed: " + e);
 		}
