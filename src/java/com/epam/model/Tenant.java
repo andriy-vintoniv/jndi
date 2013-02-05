@@ -1,6 +1,7 @@
 package com.epam.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Tenant implements Serializable {
 
@@ -10,15 +11,7 @@ public class Tenant implements Serializable {
 	private static final long serialVersionUID = 9097628235104953963L;
 	private Integer id;
 	private String name;
-	private Integer usersNumber;
-
-	public Integer getUsersNumber() {
-		return usersNumber;
-	}
-
-	public void setUsersNumber(Integer usersNumber) {
-		this.usersNumber = usersNumber;
-	}
+	private List<User> users;
 
 	public String getName() {
 		return name;
@@ -34,6 +27,14 @@ public class Tenant implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 }

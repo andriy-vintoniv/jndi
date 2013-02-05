@@ -1,5 +1,8 @@
 package com.epam.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -93,6 +96,61 @@ public abstract class GenericDAO<T> {
 		connectionService.close(dirContext);
 
 		return object;
+	}
+
+	public List<T> readAll(String groupsContext, String javaClassName) {
+		DirContext dirContext = connectionService.connect();
+		List<T> result = new ArrayList<T>();
+		Attribute javaClassNames = new BasicAttribute("javaClassNames");
+
+		javaClassNames.add(javaClassName);
+
+		Attributes attrs = new BasicAttributes(true);
+
+		NamingEnumeration<?> ne;
+		try {
+			ne = dirContext.search(groupsContext, attrs);
+
+			if (ne != null) {
+				while (ne.hasMore()) {
+					SearchResult sr = (SearchResult) ne.next();
+
+					String entryRDN = sr.getName();
+
+					String searchContext = entryRDN + "," + groupsContext;
+
+					SearchControls ctls = new SearchControls();
+					ctls.setReturningObjFlag(true);
+					ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+					String filter = "(|(javaClassName=" + javaClassName + "))";
+
+					NamingEnumeration<SearchResult> ne1 = dirContext.search(
+							searchContext, filter, ctls);
+
+					if (ne != null) {
+						while (ne1.hasMore()) {
+							SearchResult sr1 = ne1.next();
+
+							Object obj = sr1.getObject();
+
+							if (obj != null) {
+								result.add((T) obj);
+								System.out.println("User object found " + obj);
+
+							}
+						}
+					}
+				}
+			}
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		connectionService.close(dirContext);
+
+		return result;
+
 	}
 
 	public void update(T object, String cn, String baseContext) {

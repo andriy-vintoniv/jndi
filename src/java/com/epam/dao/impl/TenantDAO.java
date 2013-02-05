@@ -1,5 +1,7 @@
 package com.epam.dao.impl;
 
+import java.util.List;
+
 import com.epam.dao.GenericDAO;
 import com.epam.model.Tenant;
 
@@ -22,5 +24,10 @@ public class TenantDAO extends GenericDAO<Tenant> {
 	@Override
 	public void create(Tenant tenant, String cn, String baseContext) {
 		super.create(tenant, cn, baseContext);
+	}
+
+	@Override
+	public List<Tenant> readAll(String groupsContext, String javaClassName) {
+		return super.readAll(groupsContext, javaClassName);
 	}
 }

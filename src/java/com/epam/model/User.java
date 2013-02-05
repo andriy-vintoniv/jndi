@@ -3,9 +3,6 @@ package com.epam.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 499622394446007773L;
 	private Integer id;
 	private String name;
