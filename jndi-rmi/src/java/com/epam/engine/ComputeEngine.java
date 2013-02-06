@@ -1,10 +1,11 @@
-package java.com.epam.server.impl;
+package com.epam.engine;
 
-import java.com.epam.server.Compute;
-import java.com.epam.server.Task;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+
+import com.epam.compute.Compute;
+import com.epam.compute.Task;
 
 public class ComputeEngine implements Compute {
 
@@ -25,7 +26,8 @@ public class ComputeEngine implements Compute {
 			Compute engine = new ComputeEngine();
 			Compute stub = (Compute) UnicastRemoteObject
 					.exportObject(engine, 0);
-			Registry registry = LocateRegistry.getRegistry();
+			Registry registry = LocateRegistry.getRegistry();// "localhost",
+																// 9990);
 			registry.rebind(name, stub);
 			System.out.println("ComputeEngine bound");
 		} catch (Exception e) {

@@ -1,4 +1,4 @@
-package java.com.epam.server;
+package com.epam.compute;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
