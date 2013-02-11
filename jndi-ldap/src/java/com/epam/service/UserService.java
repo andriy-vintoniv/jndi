@@ -11,12 +11,12 @@ public class UserService {
 
 	private UserDAO userDAO = new UserDAO();
 
-	public void create(User user) {
-		this.userDAO.create(user, user.getName(), BASE_CONTEXT);
+	public void create(User user, String tenantDN) {
+		this.userDAO.create(user, tenantDN);
 	}
 
-	public User read(String cn) {
-		User user = this.userDAO.read(cn, BASE_CONTEXT, User.class.getName());
+	public User read(String cn, String tenantDN) {
+		User user = this.userDAO.read(cn, tenantDN, User.class.getName());
 		return user;
 	}
 

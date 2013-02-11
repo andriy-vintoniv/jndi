@@ -11,7 +11,7 @@ public class TenantService {
 	private TenantDAO tenantDAO = new TenantDAO();;
 
 	public void create(Tenant tenant) {
-		this.tenantDAO.create(tenant, tenant.getName(), BASE_CONTEXT);
+		this.tenantDAO.create(tenant, BASE_CONTEXT);
 	}
 
 	public Tenant read(String cn) {

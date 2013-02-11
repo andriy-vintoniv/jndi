@@ -23,20 +23,20 @@ public abstract class GenericDAO<T> {
 		connectionService = new ConnectionService();
 	}
 
-	public void create(T object, String cn, String baseContext) {
-		DirContext dirContext = connectionService.connect();
-
-		String context = "cn=" + cn + "," + baseContext;
-		if (cn != null) {
-
-			System.out.println("storing entry ");
-			try {
-				dirContext.bind(context, object);
-			} catch (NamingException e) {
-				System.out.println("Storing  operation failed: " + e);
-			}
-		}
-		connectionService.close(dirContext);
+	public void create(T object, String baseContext) {
+		// DirContext dirContext = connectionService.connect();
+		//
+		// String context = "cn=" + cn + "," + baseContext;
+		// if (cn != null) {
+		//
+		// System.out.println("storing entry ");
+		// try {
+		// dirContext.bind(context, object);
+		// } catch (NamingException e) {
+		// System.out.println("Storing  operation failed: " + e);
+		// }
+		// }
+		// connectionService.close(dirContext);
 	}
 
 	public T read(String cn, String baseContext, String javaClassName) {

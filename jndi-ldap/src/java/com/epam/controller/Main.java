@@ -3,10 +3,8 @@ package com.epam.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epam.model.PropertyName;
 import com.epam.model.Tenant;
 import com.epam.model.User;
-import com.epam.model.UserSettings;
 import com.epam.service.TenantService;
 import com.epam.service.UserService;
 
@@ -57,7 +55,7 @@ public class Main {
 		tenant.setUsers(users);
 
 		TenantService tenantService = new TenantService();
-		tenantService.create(tenant);
+//		tenantService.create(tenant);
 
 		Tenant tenant2 = tenantService.read(tenant.getName());
 
@@ -81,11 +79,11 @@ public class Main {
 		// userSettingsEmail.setPropertyName(PropertyName.EMAIL);
 		// userSettingsEmail.setPropertyValue("test@ukr.net");
 
-		// UserService userService = new UserService();
+		UserService userService = new UserService();
 
 		// userService.create(user);
 
-		// User user2 = userService.read(user.getName());
+		User userRead = userService.read(user.getName(), "cn=Tenant,ou=groups,ou=system");
 
 		// System.out.println("Read user email: " + user2.getEmail());
 

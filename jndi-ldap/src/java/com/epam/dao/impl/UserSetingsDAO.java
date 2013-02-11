@@ -7,8 +7,8 @@ import com.epam.model.UserSettings;
 
 public class UserSetingsDAO extends GenericDAO<UserSettings> {
 	@Override
-	public void create(UserSettings userSetings, String cn, String baseContext) {
-		super.create(userSetings, cn, baseContext);
+	public void create(UserSettings userSetings, String baseContext) {
+		super.create(userSetings, baseContext);
 	}
 
 	@Override
