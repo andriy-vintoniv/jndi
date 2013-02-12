@@ -1,0 +1,3 @@
+grant codeBase "file:d:\Workspaces\PDP\jndi\jndi\jndi-rmi\src\java\" {
+    permission java.security.AllPermission;
+};
