@@ -1,20 +1,25 @@
 package com.epam.dao.impl;
 
+import java.util.Enumeration;
 import java.util.List;
 
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
-import com.epam.dao.GenericDAO;
 import com.epam.model.Tenant;
 import com.epam.model.User;
 import com.epam.service.ConnectionService;
 import com.epam.service.UserService;
 
-public class TenantDAO extends GenericDAO<Tenant> {
+public class TenantDAO {
+
 	private ConnectionService connectionService;
 	private UserService userService;
 
@@ -23,18 +28,61 @@ public class TenantDAO extends GenericDAO<Tenant> {
 		userService = new UserService();
 	}
 
-	@Override
-	public Tenant read(String cn, String baseContext, String javaClassName) {
-		Tenant tenant = super.read(cn, baseContext, javaClassName);
+	public Tenant read(String name) {
+		Tenant tenant = new Tenant();
+
+		String searchBase = ConnectionService.BASE_CONTEXT;
+		String searchFilter = "cn=" + name;
+		String attributes[] = { "cn", "sn" };
+
+		DirContext ctx = connectionService.connect();
+		try {
+
+			System.out.println("Context Sucessfully Initialized");
+
+			SearchControls constraints = new SearchControls();
+			constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+			NamingEnumeration<?> results = ctx.search(searchBase, searchFilter,
+					constraints);
+
+			while (results != null && results.hasMore()) {
+				SearchResult sr = (SearchResult) results.next();
+				String dn = sr.getName() + "," + searchBase;
+				System.out.println("Distinguished Name is " + dn);
+
+				Attributes ar = ctx.getAttributes(dn, attributes);
+
+				if (ar == null) {
+					System.out.println("Entry " + dn);
+					System.out
+							.println(" has none of the specified attributes\n");
+				} else {
+					tenant.setName(ar.get(attributes[0]).getAll().nextElement()
+							.toString());
+					tenant.setUsers(userService.readAll(tenant.getName()));
+					for (int i = 0; i < attributes.length; i++) {
+						Attribute attr = ar.get(attributes[i]);
+						System.out.println(attributes[i] + ":");
+
+						for (Enumeration<?> vals = attr.getAll(); vals
+								.hasMoreElements();) {
+							System.out.println("\t" + vals.nextElement());
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		connectionService.close(ctx);
+
 		return tenant;
 	}
 
-	@Override
 	public void update(Tenant tenant, String cn, String baseContext) {
-		super.update(tenant, cn, baseContext);
 	}
 
-	@Override
 	public void create(Tenant tenant, String baseContext) {
 		DirContext dirContext = connectionService.connect();
 
@@ -68,8 +116,7 @@ public class TenantDAO extends GenericDAO<Tenant> {
 
 	}
 
-	@Override
 	public List<Tenant> readAll(String groupsContext, String javaClassName) {
-		return super.readAll(groupsContext, javaClassName);
+		return null;
 	}
 }

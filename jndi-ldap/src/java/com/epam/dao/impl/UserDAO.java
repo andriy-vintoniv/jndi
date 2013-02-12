@@ -1,5 +1,6 @@
 package com.epam.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.NamingEnumeration;
@@ -12,19 +13,25 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import com.epam.dao.GenericDAO;
 import com.epam.model.User;
 import com.epam.service.ConnectionService;
 
-public class UserDAO extends GenericDAO<User> {
+public class UserDAO {
 
 	private ConnectionService connectionService;
+	private List<String> attributesList;
 
 	public UserDAO() {
 		connectionService = new ConnectionService();
+
+		attributesList = new ArrayList<String>();
+		attributesList.add("cn");
+		attributesList.add("sn");
+		attributesList.add("mail");
+		attributesList.add("userpassword");
+		attributesList.add("uid");
 	}
 
-	@Override
 	public void create(User user, String baseContext) {
 		DirContext dirContext = connectionService.connect();
 
@@ -35,6 +42,7 @@ public class UserDAO extends GenericDAO<User> {
 		Attribute mail = new BasicAttribute("mail", user.getEmail());
 		Attribute password = new BasicAttribute("userPassword",
 				user.getPassword());
+		Attribute id = new BasicAttribute("uid", user.getId().toString());
 		Attribute oc = new BasicAttribute("objectClass");
 		oc.add("top");
 		oc.add("person");
@@ -47,6 +55,7 @@ public class UserDAO extends GenericDAO<User> {
 			entry.put(sn);
 			entry.put(mail);
 			entry.put(password);
+			entry.put(id);
 			entry.put(oc);
 
 			dirContext.createSubcontext(entryDN, entry);
@@ -55,74 +64,100 @@ public class UserDAO extends GenericDAO<User> {
 		}
 	}
 
-	@Override
-	public User read(String cn, String baseContext, String javaClassName) {
+	public User read(String tenantName, String userName) {
 		User user = new User();
+		String searchBase = "cn=" + tenantName + ","
+				+ ConnectionService.BASE_CONTEXT;
+		String searchFilter = "cn=" + userName;
 
-		DirContext dirContext = connectionService.connect();
-		Attribute cnAttribute = new BasicAttribute("cn");
-		Attribute userPassword = new BasicAttribute("userPassword");
-		Attribute sn = new BasicAttribute("sn");
-		Attribute email = new BasicAttribute("mail");
-
-		cnAttribute.add(cn);
-
-		// Instantiate an Attributes object and put search attributes in it
-		Attributes attrs = new BasicAttributes(true);
-		attrs.put(cnAttribute);
-
-		NamingEnumeration<?> ne;
+		DirContext ctx = connectionService.connect();
 		try {
-			ne = dirContext.search(baseContext, attrs);
 
-			if (ne != null) {
-				while (ne.hasMore()) {
-					SearchResult sr = (SearchResult) ne.next();
+			SearchControls constraints = new SearchControls();
+			constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-					String entryRDN = sr.getName();
+			NamingEnumeration<?> results = ctx.search(searchBase, searchFilter,
+					constraints);
 
-					String searchContext = entryRDN + "," + baseContext;
+			while (results != null && results.hasMore()) {
+				SearchResult sr = (SearchResult) results.next();
+				String dn = sr.getName() + "," + searchBase;
+				System.out.println("Distinguished Name is " + dn);
 
-					SearchControls ctls = new SearchControls();
-					ctls.setReturningObjFlag(true);
-					ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+				Attributes ar = ctx.getAttributes(dn, attributesList
+						.toArray(new String[attributesList.size()]));
 
-					String filter = "(|(javaClassName=" + javaClassName + "))";
+				if (ar == null) {
+					System.out.println("Entry " + dn);
+					System.out
+							.println(" has none of the specified attributes\n");
+				} else {
 
-					NamingEnumeration<SearchResult> ne1 = dirContext.search(
-							searchContext, filter, ctls);
-
-					if (ne != null) {
-						while (ne1.hasMore()) {
-							SearchResult sr1 = ne1.next();
-
-							Object obj = sr1.getObject();
-
-							if (obj != null) {
-								System.out.println("User object found " + obj);
-
-							}
-						}
-					}
+					user.setName(ar.get(attributesList.get(0)).getAll()
+							.nextElement().toString());
+					user.setEmail(ar.get(attributesList.get(2)).getAll()
+							.nextElement().toString());
+					user.setPassword(ar.get(attributesList.get(3)).getAll()
+							.nextElement().toString());
 				}
 			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println(e);
 		}
-		connectionService.close(dirContext);
+		connectionService.close(ctx);
 
 		return user;
 	}
 
-	@Override
 	public void update(User user, String cn, String baseContext) {
-		super.update(user, cn, baseContext);
 	}
 
-	@Override
-	public List<User> readAll(String baseContext, String javaClassName) {
-		List<User> users = super.readAll(baseContext, javaClassName);
+	public List<User> readAll(String tenantName) {
+		List<User> users = new ArrayList<User>();
+
+		String searchBase = "cn=" + tenantName + ","
+				+ ConnectionService.BASE_CONTEXT;
+		String searchFilter = "objectClass=person";
+
+		DirContext ctx = connectionService.connect();
+		try {
+
+			System.out.println("Context Sucessfully Initialized");
+
+			SearchControls constraints = new SearchControls();
+			constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+
+			NamingEnumeration<?> results = ctx.search(searchBase, searchFilter,
+					constraints);
+
+			while (results != null && results.hasMore()) {
+				SearchResult sr = (SearchResult) results.next();
+				String dn = sr.getName() + "," + searchBase;
+				System.out.println("Distinguished Name is " + dn);
+
+				Attributes ar = ctx.getAttributes(dn, attributesList
+						.toArray(new String[attributesList.size()]));
+				User user = new User();
+				if (ar == null) {
+					System.out.println("Entry " + dn);
+					System.out
+							.println(" has none of the specified attributes\n");
+				} else {
+					user.setName(ar.get(attributesList.get(0)).getAll()
+							.nextElement().toString());
+					user.setEmail(ar.get(attributesList.get(2)).getAll()
+							.nextElement().toString());
+					user.setPassword(ar.get(attributesList.get(3)).getAll()
+							.nextElement().toString());
+
+					users.add(user);
+				}
+			}
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		connectionService.close(ctx);
+
 		return users;
 	}
 

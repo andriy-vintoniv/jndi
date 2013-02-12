@@ -6,8 +6,6 @@ import com.epam.dao.impl.UserDAO;
 import com.epam.model.User;
 
 public class UserService {
-	private final static String BASE_CONTEXT = "cn=User,ou=groups";
-	private final static String GROUPS_CONTEXT = "ou=groups";
 
 	private UserDAO userDAO = new UserDAO();
 
@@ -15,19 +13,16 @@ public class UserService {
 		this.userDAO.create(user, tenantDN);
 	}
 
-	public User read(String cn, String tenantDN) {
-		User user = this.userDAO.read(cn, tenantDN, User.class.getName());
+	public User read(String tenantDN, String userName) {
+		User user = this.userDAO.read(tenantDN, userName);
 		return user;
 	}
 
 	public void update(User user) {
-		this.userDAO.update(user, user.getName(), BASE_CONTEXT);
 	}
 
-	public List<User> readAll() {
-		List<User> users = this.userDAO.readAll(GROUPS_CONTEXT,
-				User.class.getName());
+	public List<User> readAll(String tenantName) {
+		List<User> users = this.userDAO.readAll(tenantName);
 		return users;
 	}
-
 }

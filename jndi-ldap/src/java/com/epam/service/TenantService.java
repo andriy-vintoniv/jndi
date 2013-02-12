@@ -14,9 +14,8 @@ public class TenantService {
 		this.tenantDAO.create(tenant, BASE_CONTEXT);
 	}
 
-	public Tenant read(String cn) {
-		Tenant tenant = this.tenantDAO.read(cn, BASE_CONTEXT,
-				Tenant.class.getName());
+	public Tenant read(String name) {
+		Tenant tenant = this.tenantDAO.read(name);
 		return tenant;
 	}
 

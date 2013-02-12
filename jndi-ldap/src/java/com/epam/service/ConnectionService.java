@@ -7,6 +7,9 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
 public class ConnectionService {
+
+	public final static String BASE_CONTEXT = "cn=Tenant,ou=groups";
+
 	private Properties properties = new Properties();
 
 	public ConnectionService() {

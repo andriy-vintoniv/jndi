@@ -55,7 +55,7 @@ public class Main {
 		tenant.setUsers(users);
 
 		TenantService tenantService = new TenantService();
-//		tenantService.create(tenant);
+		tenantService.create(tenant);
 
 		Tenant tenant2 = tenantService.read(tenant.getName());
 
@@ -83,7 +83,7 @@ public class Main {
 
 		// userService.create(user);
 
-		User userRead = userService.read(user.getName(), "cn=Tenant,ou=groups,ou=system");
+		User userRead = userService.read(tenant.getName(), user.getName());
 
 		// System.out.println("Read user email: " + user2.getEmail());
 
