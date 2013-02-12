@@ -1,0 +1,1 @@
+D:\Programming\PDP\jndi\jndi-rmi2\src\java>start java -classpath d:\Programming\PDP\jndi\jndi-rmi2\src\java com.epam.Server
