@@ -1,0 +1,1 @@
+Move "run.bat" to bin folder and run. RMI registry, RMI server and client will be run.
