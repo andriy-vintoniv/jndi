@@ -25,7 +25,7 @@ public class Server implements ScriptEvaluator {
 			ScriptEvaluator stub = (ScriptEvaluator) UnicastRemoteObject
 					.exportObject(obj, 0);
 			Registry registry = LocateRegistry.getRegistry();
-			registry.rebind("Hello", stub);
+			registry.rebind("ScriptEvaluator", stub);
 
 			System.err.println("Server ready");
 		} catch (Exception e) {
@@ -72,7 +72,8 @@ public class Server implements ScriptEvaluator {
 
 			Object object = engine.get("object");
 
-			index = (Integer) invoker.invokeMethod(object, word, text);
+			index = (Integer) invoker.invokeMethod(object, "findWord", word,
+					text);
 
 		} catch (ScriptException e) {
 			System.err

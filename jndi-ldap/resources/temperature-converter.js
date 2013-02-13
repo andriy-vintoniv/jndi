@@ -7,10 +7,3 @@ function convert(temperature, degree) {
 	}
 	return result;
 }
-
-var object = new Object();
-
-object.findWord = function(word, text) {
-	var index = text.indexOf(word);
-	return index;
-}
