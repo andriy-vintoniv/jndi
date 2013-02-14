@@ -18,14 +18,6 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public String getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -49,4 +41,13 @@ public class User implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
 }

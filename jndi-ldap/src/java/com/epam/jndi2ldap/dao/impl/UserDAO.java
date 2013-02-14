@@ -30,6 +30,7 @@ public class UserDAO {
 		attributesList.add("mail");
 		attributesList.add("userpassword");
 		attributesList.add("uid");
+		// attributesList.add("birthday");
 	}
 
 	public void create(User user, String baseContext) {
@@ -37,19 +38,21 @@ public class UserDAO {
 
 		String entryDN = "cn=" + user.getName() + "," + baseContext;
 
-		Attribute cn = new BasicAttribute("cn", user.getName());
-		Attribute sn = new BasicAttribute("sn", user.getName());
-		Attribute mail = new BasicAttribute("mail", user.getEmail());
-		Attribute password = new BasicAttribute("userPassword",
-				user.getPassword());
-		Attribute id = new BasicAttribute("uid", user.getId().toString());
-		Attribute oc = new BasicAttribute("objectClass");
-		oc.add("top");
-		oc.add("person");
-		oc.add("organizationalPerson");
-		oc.add("inetOrgPerson");
-
 		try {
+			Attribute cn = new BasicAttribute("cn", user.getName());
+			Attribute sn = new BasicAttribute("sn", user.getName());
+			Attribute mail = new BasicAttribute("mail", user.getEmail());
+			Attribute password;
+			password = new BasicAttribute("userPassword", user.getPassword());
+			Attribute id = new BasicAttribute("uid", user.getId().toString());
+			// Attribute birthday = new BasicAttribute("birthday",
+			// user.getBirthday());
+			Attribute oc = new BasicAttribute("objectClass");
+			oc.add("top");
+			oc.add("person");
+			oc.add("organizationalPerson");
+			oc.add("inetOrgPerson");
+
 			BasicAttributes entry = new BasicAttributes();
 			entry.put(cn);
 			entry.put(sn);
@@ -57,6 +60,7 @@ public class UserDAO {
 			entry.put(password);
 			entry.put(id);
 			entry.put(oc);
+			// entry.put(birthday);
 
 			dirContext.createSubcontext(entryDN, entry);
 		} catch (NamingException e) {
@@ -107,9 +111,6 @@ public class UserDAO {
 		connectionService.close(ctx);
 
 		return user;
-	}
-
-	public void update(User user, String cn, String baseContext) {
 	}
 
 	public List<User> readAll(String tenantName) {

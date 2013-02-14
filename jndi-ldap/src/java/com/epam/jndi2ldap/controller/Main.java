@@ -63,8 +63,6 @@ public class Main {
 
 		UserService userService = new UserService();
 
-		// userService.create(user);
-
 		User userRead = userService.read(tenant.getName(), user.getName());
 
 	}

@@ -12,7 +12,6 @@ public class ClientUtill {
 
 	public void testStub(ScriptEvaluator scriptEvaluator) {
 		String temperatureScript = getText("resources/temperature-converter.js");
-		String findWordScript = getText("resources/word-finder.js");
 
 		try {
 			Double temperature;
@@ -21,8 +20,8 @@ public class ClientUtill {
 			System.out.println(temperature);
 
 			String word = "text";
-			Integer index = scriptEvaluator.findWord(findWordScript, word,
-					findWordScript);
+			Integer index = scriptEvaluator.findWord(temperatureScript, word,
+					temperatureScript);
 
 			System.out.println("Index of word '" + word + "' in text is "
 					+ index);
